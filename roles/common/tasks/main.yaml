@@ -1,0 +1,32 @@
+#  - name: dist-upgrade
+#    apt:
+#      update_cache: yes
+#      upgrade: dist
+
+  - name: zsh, wget installed
+    apt:
+      pkg:
+      - zsh
+      - wget
+      force: yes
+      state: present
+
+  - name: fs.file-max=120400
+    sysctl:
+      name: fs.file-max
+      value: '1204000'
+      sysctl_set: yes
+
+  - name: net.core.somaxconn=65535
+    sysctl:
+      name: net.core.somaxconn
+      value: '65535'
+      sysctl_set: yes
+
+  - name: ssh authorized keys for root
+    authorized_key: user=root state=present key={{ item }}
+    with_items:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTNbMeLt1h4EOmtEk/E3VEQ5rOyT+/xZTkpIxGBJrckZuO9hoilK/YAKWThptvmPowGybWMh69RgFTDwsnj3bEn1hwJYg6vS6d5k4kqoRY+xuuMuGju0NCI/LaG/dL/u6h7DmP2Ycc2d1oEg1Z4HNq6SdhNvCWXt6fkVrGwvHH/yRm3mdsPVk6oiEyCTQgtUXa97iL3mX24uTgGpg3f402Q/r5gUdfZA82eam/4+4W3a2AMxrZfrScOQtsZzcFsXzrVGLHpp1RRjbLBNxd7oaisl7p6ILBZmmnV4zMd2Bz5CBZGjpl7AqV231Vud66XxybZ2WSIqpazCJnhaLdOHB/"
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmcrUdpmWQd/wEIGn0cFWrE8MeYlTMalcMKAqaXX7/QPs3ViSm25U/lW/0JxM1sULkJlNorT2Bzwr3Mq487peAK5XXGlA2AZ56cB0eCGk/FQldqLOVq5788TZc7tRznLuXdJ1IA97qo8KvFw89kWaFyXDRsIyUz1eBcGcuc7ObpIg10qBTQu4c7hkQYfvqeyhBFuRKZ03btk0X+uCk9ykaAx8y5qMS3DaqbB7Y/tsXge2DP7YgVVSJfaQAMIfTwQeE5rGs58Zk1KWliY1L2MqL8/+GV6qt86q380O61yBM8Unq8Elh9Rv/+H6x6ou/efsrhj6kUlhbGbABl9i6smsj"
+
+# vim: ts=2 sw=2 sts=2 ai et:

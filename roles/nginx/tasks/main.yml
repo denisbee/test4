@@ -1,0 +1,39 @@
+  - name: nginx public key
+    apt_key:
+      url: https://nginx.org/keys/nginx_signing.key
+      state: present
+
+  - name: nginx repo
+    apt_repository:
+      repo: deb http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx
+      state: present
+
+  - name: nginx installed
+    apt: name=nginx state=present
+
+  - name: nginx running
+    service: name=nginx state=started
+
+  - name: git installed
+    apt: name=git state=present
+
+  - name: /var/www not present
+    file: path=/var/www state=absent
+
+  - name: clone example page to /var/www
+    git:
+      repo: https://github.com/itconsultis/simple-html-maintenance-page.git
+      dest: /var/www
+      depth: 1
+
+  - name: /var/www ugo+rx
+    file: path=/var/www mode=555
+
+  - name: nginx config
+    copy: src={{ item }} dest=/etc/nginx/{{ item }} owner=root group=root mode=0644
+    with_items:
+      - nginx.conf
+      - mime.types
+    notify: reload nginx
+
+# vim: ts=2 sw=2 sts=2 ai et:
